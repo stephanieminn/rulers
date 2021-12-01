@@ -5,6 +5,8 @@ require "rulers/routing"
 require "rulers/util"
 require "rulers/dependencies"
 require "rulers/controller"
+require "rulers/file_model"
+require "rulers/cache"
 
 module Rulers
   class Application
@@ -21,9 +23,9 @@ module Rulers
         [200, {'Content-Type' => 'text/html'},
           [text]]
       rescue => exception
-        STDERR.puts exception.message
+        STDERR.puts exception.inspect
         [500, {'Content-Type' => 'text/html'},
-          ["Uh oh!"]]
+          ["Uh oh! Error: #{exception.message}"]]
       end
     end
   end
