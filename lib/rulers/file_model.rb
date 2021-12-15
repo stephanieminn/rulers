@@ -34,7 +34,7 @@ module Rulers
       def self.method_missing(method_name, *args)
         if method_name.to_s.start_with?("find_all_by_")
           attribute = method_name.to_s.split("_").last
-          return self.send(:find_all_by, attribute, args[0])
+          return send(:find_all_by, attribute, args[0])
         end
 
         super

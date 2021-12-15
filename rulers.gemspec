@@ -37,6 +37,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "multi_json"
   spec.add_runtime_dependency "rack", "~> 2.2.3"
   spec.add_development_dependency "rack-test"
+  spec.add_runtime_dependency "sqlite3"
 
   # For more information and examples about making a new gem, checkout our
   # guide at: https://bundler.io/guides/creating_gem.html

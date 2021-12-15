@@ -10,7 +10,7 @@ module Rulers
         files = Dir["db/quotes/*.json"]
         models = files.map { |f| FileModel.new f }
         models.each do |model|
-          @hash[model.id] = model
+          @hash[model.id.to_s] = model
         end
 
         STDERR.puts "Existing records cached!"

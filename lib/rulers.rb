@@ -20,10 +20,14 @@ module Rulers
       controller = klass.new(env)
       begin
         text = controller.send(act)
-        [200, {'Content-Type' => 'text/html'},
-          [text]]
+        r = controller.get_response
+        if r
+          [r.status, r.headers, [r.body].flatten]
+        else
+          controller.render_response act.to_sym
+        end
       rescue => exception
-        STDERR.puts exception.inspect
+        STDERR.puts exception.backtrace
         [500, {'Content-Type' => 'text/html'},
           ["Uh oh! Error: #{exception.message}"]]
       end
