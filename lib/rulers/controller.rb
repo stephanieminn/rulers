@@ -4,12 +4,27 @@ module Rulers
   class Controller
     def initialize(env)
       @env = env
-      @controller_name = Rulers::Application.new.get_controller_and_action(env).first
+      @routing_params = {}
       @user_agent = env["HTTP_USER_AGENT"]
       @rulers_version = Rulers::VERSION
     end
 
     attr_reader :env, :controller_name, :user_agent, :rulers_version
+
+    def dispatch(action, routing_params = {})
+      @routing_params = routing_params
+      text = self.send(action)
+      r = get_response
+      if r
+        [r.status, r.headers, [r.body].flatten]
+      else
+        [200, {'Content-Type' => 'text/html'}, [text].flatten]
+      end
+    end
+
+    def self.action(act, rp = {})
+      proc { |e| self.new(e).dispatch(act, rp) }
+    end
 
     def render(view_name, locals = {})
       filename = File.join "app", "views", controller_name, "#{view_name}.html.erb"
@@ -34,7 +49,7 @@ module Rulers
     end
 
     def params
-      request.params
+      request.params.merge @routing_params
     end
 
     def response(text, status = 200, headers = {})

@@ -16,21 +16,8 @@ module Rulers
           {'Content-Type' => 'text/html'}, []]
       end
 
-      klass, act = get_controller_and_action(env)
-      controller = klass.new(env)
-      begin
-        text = controller.send(act)
-        r = controller.get_response
-        if r
-          [r.status, r.headers, [r.body].flatten]
-        else
-          controller.render_response act.to_sym
-        end
-      rescue => exception
-        STDERR.puts exception.backtrace
-        [500, {'Content-Type' => 'text/html'},
-          ["Uh oh! Error: #{exception.message}"]]
-      end
+      rack_app = get_rack_app(env)
+      rack_app.call(env)
     end
   end
 end
